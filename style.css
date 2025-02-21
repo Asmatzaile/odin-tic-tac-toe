@@ -7,3 +7,16 @@
 * {
     font-family: Inter, Helvetica, Arial, sans-serif;
 }
+
+#board {
+    font-size: 50px;
+    width: 200px;
+    height: 200px;
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    place-content: center;
+    > * {
+        display: grid;
+        place-content: center;
+    }
+}

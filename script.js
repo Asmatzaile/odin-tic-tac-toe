@@ -1,3 +1,17 @@
+const displayController = (() => {
+    const boardDiv = document.querySelector("#board");
+    const renderBoard = () => {
+        const board = gameboard.getBoard();
+        const newChildren = board.map(cell => {
+            const cellEl = document.createElement(cell === undefined ? "button" : "div");
+            cellEl.textContent = cell ?? "";
+            return cellEl;
+        })
+        boardDiv.replaceChildren(...newChildren);
+    }
+    return { renderBoard };
+})();
+
 const gameboard = (() => {
     const board = new Array(9);
     const getBoard = () => [...board];
@@ -44,13 +58,14 @@ const game = (() => {
     const playTurn = index => {
         const currentPlayer = getCurrentPlayer();
         const board = currentPlayer.placeToken(index);
-        console.log(board);
+        displayController.renderBoard();
         const win = checkWin();
         if (win) return endGame(currentPlayer.name);
         if (!board.includes(undefined)) return endGame();
         advanceTurn();
     };
 
+    displayController.renderBoard();
     return { playTurn };
 })();
 
