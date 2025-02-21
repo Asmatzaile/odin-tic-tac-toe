@@ -23,11 +23,36 @@ const game = (() => {
     const getCurrentPlayer = () => players[currentTurn];
     const advanceTurn = () => currentTurn = (currentTurn + 1) % 2;
 
+    const winCombos = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // horizontal
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // vertical
+        [0, 4, 8], [2, 4, 6] // diagonal
+    ]
+    const checkWin = () => {
+        const board = gameboard.getBoard();
+        return winCombos.find(combo => {
+            const comboCells = combo.map(index => board[index]);
+            return utils.allEqual(comboCells) && !comboCells.includes(undefined);
+        }) !== undefined;
+    }
+
+    const endGame = (winnerName) => {
+        console.log(`Game over! ${winnerName} wins.`)
+    }
+
     const playTurn = index => {
-        const board = getCurrentPlayer().placeToken(index);
+        const currentPlayer = getCurrentPlayer();
+        const board = currentPlayer.placeToken(index);
+        console.log(board);
+        const win = checkWin();
+        if (win) return endGame(currentPlayer.name);
         advanceTurn();
-        return board;
     };
 
     return { playTurn };
+})();
+
+const utils = (()=> {
+    const allEqual = arr => arr.every(el => el === arr[0]);
+    return { allEqual };
 })();
