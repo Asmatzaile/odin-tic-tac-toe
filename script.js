@@ -37,7 +37,8 @@ const game = (() => {
     }
 
     const endGame = (winnerName) => {
-        console.log(`Game over! ${winnerName} wins.`)
+        if (winnerName) return console.log(`Game over! ${winnerName} wins.`);
+        return console.log(`Game over! You tied.`)
     }
 
     const playTurn = index => {
@@ -46,6 +47,7 @@ const game = (() => {
         console.log(board);
         const win = checkWin();
         if (win) return endGame(currentPlayer.name);
+        if (!board.includes(undefined)) return endGame();
         advanceTurn();
     };
 
