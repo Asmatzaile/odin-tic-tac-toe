@@ -13,5 +13,21 @@ const createPlayer = (name, token) => {
     return { name, placeToken }
 };
 
-const player1 = createPlayer("P1", "X");
-const player2 = createPlayer("P2", "O");
+const game = (() => {
+    const players = [
+        createPlayer("P1", "X"),
+        createPlayer("P2", "O")
+    ];
+
+    let currentTurn = 0;
+    const getCurrentPlayer = () => players[currentTurn];
+    const advanceTurn = () => currentTurn = (currentTurn + 1) % 2;
+
+    const playTurn = index => {
+        const board = getCurrentPlayer().placeToken(index);
+        advanceTurn();
+        return board;
+    };
+
+    return { playTurn };
+})();
