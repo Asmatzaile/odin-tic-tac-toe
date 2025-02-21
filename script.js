@@ -2,9 +2,15 @@ const displayController = (() => {
     const boardDiv = document.querySelector("#board");
     const renderBoard = () => {
         const board = gameboard.getBoard();
-        const newChildren = board.map(cell => {
-            const cellEl = document.createElement(cell === undefined ? "button" : "div");
-            cellEl.textContent = cell ?? "";
+        const newChildren = board.map((cell, index) => {
+            let cellEl;
+            if (cell === undefined) {
+                cellEl = document.createElement("button");
+                cellEl.onclick = () => game.playTurn(index);
+            } else {
+                cellEl = document.createElement("div");
+                cellEl.textContent = cell;
+            }
             return cellEl;
         })
         boardDiv.replaceChildren(...newChildren);
