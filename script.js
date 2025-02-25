@@ -1,5 +1,12 @@
 const displayController = (() => {
     const boardDiv = document.querySelector("#board");
+    const gameoverDialog = document.querySelector('#gameover-dialog');
+    const dialogSpan = gameoverDialog.querySelector('span');
+    gameoverDialog.querySelector('button').onclick = () => {
+        gameoverDialog.close();
+        game.restart();
+    }
+
     const renderBoard = () => {
         const board = gameboard.getBoard();
         const newChildren = board.map((cell, index) => {
@@ -15,7 +22,13 @@ const displayController = (() => {
         })
         boardDiv.replaceChildren(...newChildren);
     }
-    return { renderBoard };
+
+    const showDialog = (message) => {
+        dialogSpan.textContent = message;
+        gameoverDialog.showModal();
+    }
+
+    return { renderBoard, showDialog };
 })();
 
 const gameboard = (() => {
@@ -25,7 +38,8 @@ const gameboard = (() => {
         board[index] = token;
         return getBoard();
     }
-    return { getBoard, placeToken }
+    const reset = () => board.fill(undefined);
+    return { getBoard, placeToken, reset }
 })();
 
 const createPlayer = (name, token) => {
@@ -39,7 +53,13 @@ const game = (() => {
         createPlayer("P2", "O")
     ];
 
-    let currentTurn = 0;
+    let currentTurn;
+    const restart = () => {
+        currentTurn = 0;
+        gameboard.reset();
+        displayController.renderBoard();
+    }
+    
     const getCurrentPlayer = () => players[currentTurn];
     const advanceTurn = () => currentTurn = (currentTurn + 1) % 2;
 
@@ -57,8 +77,8 @@ const game = (() => {
     }
 
     const endGame = (winnerName) => {
-        if (winnerName) return console.log(`Game over! ${winnerName} wins.`);
-        return console.log(`Game over! You tied.`)
+        const message = `Game over! ${winnerName ? `${winnerName} wins.` : "You tied."}`;
+        displayController.showDialog(message);
     }
 
     const playTurn = index => {
@@ -71,8 +91,8 @@ const game = (() => {
         advanceTurn();
     };
 
-    displayController.renderBoard();
-    return { playTurn };
+    restart();
+    return { playTurn, restart };
 })();
 
 const utils = (()=> {

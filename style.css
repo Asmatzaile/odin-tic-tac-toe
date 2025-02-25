@@ -11,6 +11,11 @@ button {
     }
 }
 
+dialog {
+    border: none;
+    margin: auto; /* centering */
+}
+
 * {
     font-family: Inter, Helvetica, Arial, sans-serif;
 }
@@ -34,6 +39,22 @@ h1 {
     font-weight: normal;
     text-transform: uppercase;
     letter-spacing: -0.02em;
+}
+
+dialog {
+    border-radius: 5px;
+}
+dialog > div {
+    padding: 20px 40px;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    button {
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
 }
 
 #board {
