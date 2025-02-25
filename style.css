@@ -16,6 +16,10 @@ dialog {
     margin: auto; /* centering */
 }
 
+fieldset {
+    border: none;
+}
+
 * {
     font-family: Inter, Helvetica, Arial, sans-serif;
 }
@@ -55,6 +59,27 @@ dialog > div {
         padding: 5px 10px;
         border-radius: 5px;
     }
+}
+dialog > form {
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    > fieldset {
+        display: flex;
+        gap: 10px;
+        > label {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    button {
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    
 }
 
 #board {

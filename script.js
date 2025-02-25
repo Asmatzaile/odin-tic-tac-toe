@@ -1,12 +1,23 @@
 const displayController = (() => {
-    const boardDiv = document.querySelector("#board");
+    const setupDialog = document.querySelector('#setup-dialog');
+    const p1NameInput = setupDialog.querySelector('#p1-name');
+    const p2NameInput = setupDialog.querySelector('#p2-name');
+    setupDialog.querySelector('button').onclick = () => {
+        const p1Name = p1NameInput.value;
+        const p2Name = p2NameInput.value;
+        game.setupPlayers(p1Name, p2Name);
+    }
     const gameoverDialog = document.querySelector('#gameover-dialog');
-    const dialogSpan = gameoverDialog.querySelector('span');
+    const setGameoverMessage = (() => {
+        const span = gameoverDialog.querySelector('span');
+        return (message) => span.textContent = message;
+    })();
     gameoverDialog.querySelector('button').onclick = () => {
         gameoverDialog.close();
         game.restart();
     }
-
+    
+    const boardDiv = document.querySelector("#board");
     const renderBoard = () => {
         const board = gameboard.getBoard();
         const newChildren = board.map((cell, index) => {
@@ -23,12 +34,16 @@ const displayController = (() => {
         boardDiv.replaceChildren(...newChildren);
     }
 
-    const showDialog = (message) => {
-        dialogSpan.textContent = message;
+    const showSetupDialog = () => {
+        setupDialog.showModal();
+    }
+
+    const showGameoverDialog = (message) => {
+        setGameoverMessage(message);
         gameoverDialog.showModal();
     }
 
-    return { renderBoard, showDialog };
+    return { renderBoard, showGameoverDialog, showSetupDialog };
 })();
 
 const gameboard = (() => {
@@ -47,11 +62,15 @@ const createPlayer = (name, token) => {
     return { name, placeToken }
 };
 
+
+
 const game = (() => {
-    const players = [
-        createPlayer("P1", "X"),
-        createPlayer("P2", "O")
-    ];
+    let players;
+    const setupPlayers = (p1Name, p2Name) => players = createPlayers(p1Name, p2Name);
+    const createPlayers = (p1Name="P1", p2Name="P2") => [
+        createPlayer(p1Name, "X"),
+        createPlayer(p2Name, "O")
+    ]
 
     let currentTurn;
     const restart = () => {
@@ -78,7 +97,7 @@ const game = (() => {
 
     const endGame = (winnerName) => {
         const message = `Game over! ${winnerName ? `${winnerName} wins.` : "You tied."}`;
-        displayController.showDialog(message);
+        displayController.showGameoverDialog(message);
     }
 
     const playTurn = index => {
@@ -91,8 +110,9 @@ const game = (() => {
         advanceTurn();
     };
 
+    displayController.showSetupDialog();
     restart();
-    return { playTurn, restart };
+    return { playTurn, restart, setupPlayers };
 })();
 
 const utils = (()=> {
